@@ -11,7 +11,7 @@ export default function Component() {
         <div
           className="w-full max-w-md lg:max-w-lg h-96 lg:h-[500px] rounded-2xl p-8 lg:p-12 text-white relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #252422 0%, #eb5e28 100%)",
+            background: "linear-gradient(135deg, #252422 50%, #eb5e28 100%)",
           }}
         >
           <div className="relative z-10">
@@ -37,15 +37,14 @@ export default function Component() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-[#252422] py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+      <section className="bg-[#252422] py-16 lg:py-24 flex-row">
+        <div className="container  mx-auto px-4">
+          <div className="grid grid-cols-1 gap-16">
             {/* Feature 1 */}
             <div className="text-white">
               <h3 className="text-xl font-bold mb-4">Monte treinos e compartilhe com facilidade.</h3>
               <p className="text-sm opacity-80 mb-6 leading-relaxed">
-                Estruture treinos completos, organize a agenda e envie tudo direto para o app do aluno, em poucos
-                cliques.
+            
               </p>
               <div className="bg-[#ccc5b9] rounded-lg p-4 h-32 flex items-center justify-center">
                 <Image
@@ -53,7 +52,7 @@ export default function Component() {
                   alt="Training interface"
                   width={120}
                   height={80}
-                  className="object-cover rounded"
+                  className="object-cover rounded absolute bottom-0"
                 />
               </div>
               <div className="flex justify-center mt-4 space-x-2">
@@ -174,15 +173,16 @@ export default function Component() {
       </section>
 
       {/* Bottom Section */}
-      <section className="py-16 lg:py-24 bg-[#f5f5f5]">
+      <section className="py-16 lg:py-24 bg-[#f5f5f5]" >
+        
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h3 className="text-xl font-semibold text-[#252422] mb-4">Faça parte desse time</h3>
           </div>
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="flex-1 flex justify-center">
+            <div className=" flex-1 flex justify-center">
               <Image
-                src="/placeholder.svg?height=300&width=250"
+                src="/db-statue.png"
                 alt="Bodybuilder"
                 width={250}
                 height={300}
