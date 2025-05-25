@@ -67,7 +67,7 @@ function ContactForm() {
     // API call
     try {
       console.log("call")
-      const response = await fetch("https://gymo-smoke-back-production.up.railway.app", {
+      const response = await fetch(process.env.API_URL!, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
