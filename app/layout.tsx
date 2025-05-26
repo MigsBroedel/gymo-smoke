@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import './globals.css'
-import { notFound } from 'next/navigation';
-import LocaleProvider from './LocaleProvider';
+import '../styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -13,18 +11,13 @@ export const locales = ['en', 'pt'];
 export const defaultLocale = 'en';
 
 export default function RootLayout({
-  children,
-  params: { locale },
+  children
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
 }>) {
-  if (!locales.includes(locale)) notFound();
   return (
-    <html lang={locale}>
-      <body>
-        <LocaleProvider>{children}</LocaleProvider>
-      </body>
+    <html>
+      <body>{children}</body>
     </html>
   );
 }

@@ -1,4 +1,4 @@
-import '../globals.css';
+import '../../styles/globals.css';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import LocaleProvider from '../LocaleProvider';
@@ -19,11 +19,5 @@ export default async function LocaleLayout({
 }>) {
   const { locale } = await params;
   if (!locales.includes(locale)) notFound();
-  return (
-    <html lang={locale}>
-      <body>
-        <LocaleProvider>{children}</LocaleProvider>
-      </body>
-    </html>
-  );
+  return <LocaleProvider>{children}</LocaleProvider>;
 }

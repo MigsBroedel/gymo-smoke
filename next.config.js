@@ -1,4 +1,6 @@
-module.exports = {
+const withNextIntl = require('next-intl/plugin')();
+
+module.exports = withNextIntl({
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -8,4 +10,4 @@ module.exports = {
   images: {
     unoptimized: true,
   },
-};
+});
