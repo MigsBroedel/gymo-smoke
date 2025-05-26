@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -198,10 +198,12 @@ function ContactForm() {
   )
 }
 
+// --- FeatureCarousel improvements ---
 function FeatureCarousel() {
   const t = useTranslations();
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isUserInteracting, setIsUserInteracting] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const features = [
     {
@@ -225,11 +227,26 @@ function FeatureCarousel() {
     setCurrentSlide((prev) => (prev + 1) % features.length)
   }, [features.length])
 
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + features.length) % features.length)
+  }, [features.length])
+
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
     setIsUserInteracting(true)
-    // Reset user interaction after 20 seconds
-    setTimeout(() => setIsUserInteracting(false), 20000)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
+  }
+
+  const handleNavigation = (direction: "prev" | "next") => {
+    if (direction === "prev") {
+      prevSlide()
+    } else {
+      nextSlide()
+    }
+    setIsUserInteracting(true)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
   }
 
   useEffect(() => {
@@ -239,6 +256,12 @@ function FeatureCarousel() {
     }
   }, [nextSlide, isUserInteracting])
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   return (
     <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 px-4">
       {/* Texto à esquerda */}
@@ -246,15 +269,21 @@ function FeatureCarousel() {
         <h3 className="text-6xl lg:text-6xl font-extrabold mb-6 text-white">
           {features[currentSlide].title}
         </h3>
-        <div className="bg-orange-500 h-1 w-1/2 rounded-lg m-2">
-
-        </div>
+        <div className="bg-orange-500 h-1 w-1/2 rounded-lg m-2" />
         <p className="text-xl opacity-80 mb-8 leading-relaxed text-white">
           {features[currentSlide].description}
         </p>
-
-        {/* Carousel dots */}
-        <div className="flex space-x-3 mt-4 lg:mt-8">
+        {/* Carousel navigation */}
+        <div className="flex items-center space-x-3 mt-4 lg:mt-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20"
+            onClick={() => handleNavigation("prev")}
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
           {features.map((_, index) => (
             <button
               key={index}
@@ -262,11 +291,20 @@ function FeatureCarousel() {
               className={`w-3 h-3 rounded-full transition-all ${
                 index === currentSlide ? "bg-white" : "bg-white/50"
               }`}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20"
+            onClick={() => handleNavigation("next")}
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
         </div>
       </div>
-
       {/* Imagem à direita */}
       <div className=" bg-[#D4C4A8] rounded-2xl p-8 flex justify-center h-1/4 w-1/3">
         <div className="w-72 max-w-md h-64 relative">
@@ -282,10 +320,12 @@ function FeatureCarousel() {
   )
 }
 
+// --- MobileAppCarousel improvements ---
 function MobileAppCarousel() {
   const t = useTranslations();
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isUserInteracting, setIsUserInteracting] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const appScreens = [
     {
@@ -295,16 +335,15 @@ function MobileAppCarousel() {
         <div>
           <Image src="/social-post-gymo.png" alt="Mobile app interface" className="object-cover rounded-2xl" width={200} height={200} />
         </div>
-        
       ),
     },
     {
       title: t('appCarousel.1.title'),
       description: t('appCarousel.1.desc'),
       mockup: (
-          <div>
-            <Image src="/mobile-app.png" alt="Mobile app interface" className="object-cover rounded-2xl"  width={200} height={200} />
-          </div>
+        <div>
+          <Image src="/mobile-app.png" alt="Mobile app interface" className="object-cover rounded-2xl" width={200} height={200} />
+        </div>
       ),
     },
   ]
@@ -324,8 +363,8 @@ function MobileAppCarousel() {
       nextSlide()
     }
     setIsUserInteracting(true)
-    // Reset user interaction after 20 seconds
-    setTimeout(() => setIsUserInteracting(false), 20000)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
   }
 
   useEffect(() => {
@@ -335,6 +374,12 @@ function MobileAppCarousel() {
     }
   }, [nextSlide, isUserInteracting])
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   return (
     <div className="flex items-center justify-between max-w-6xl mx-auto">
       <Button
@@ -342,25 +387,24 @@ function MobileAppCarousel() {
         size="icon"
         className="text-white hover:bg-white/20 flex-shrink-0"
         onClick={() => handleNavigation("prev")}
+        aria-label="Previous app screen"
       >
         <ChevronLeft className="h-8 w-8" />
       </Button>
-
       <div className="flex-1 mx-8 lg:mx-16 text-center">
         <h3 className="text-2xl lg:text-3xl font-bold mb-6 leading-tight">{appScreens[currentSlide].title}</h3>
         <p className="text-lg opacity-90 mb-8 leading-relaxed max-w-2xl mx-auto">
           {appScreens[currentSlide].description}
         </p>
-
         {/* Phone mockup */}
         <div className="flex justify-center">{appScreens[currentSlide].mockup}</div>
       </div>
-
       <Button
         variant="ghost"
         size="icon"
         className="text-white hover:bg-white/20 flex-shrink-0"
         onClick={() => handleNavigation("next")}
+        aria-label="Next app screen"
       >
         <ChevronRight className="h-8 w-8" />
       </Button>
@@ -440,7 +484,7 @@ export default function GymoLandingPage() {
             {/* Bodybuilder image */}
             <div className="w-2/3 bg-gray-500 rounded-lg relative flex-shrink-0">
               <Image
-                src="./db-statue.png"
+                src="/db-statue.png"
                 alt="Bodybuilder flexing"
                 width={650}
                 height={750}
