@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const withNextIntl = require('next-intl/plugin')();
+
+module.exports = withNextIntl({
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,6 +10,4 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
-
-export default nextConfig
+});

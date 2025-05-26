@@ -1,0 +1,69 @@
+{
+  "hero": {
+    "title": "GYMO",
+    "subtitle": "We connect professionals and students who take training to another level.",
+    "description": "The platform that brings trainers and students together in one place. A space to manage workouts, track results, and maintain efficient, constant communication."
+  },
+  "form": {
+    "title": "Sign up to get early access!",
+    "name": "Full name",
+    "email": "Email",
+    "roleLabel": "You are:",
+    "role": {
+      "trainer": "Trainer",
+      "gym": "I own a gym",
+      "student": "Student"
+    },
+    "studentCount": "How many students do you serve?",
+    "studentCountOptions": {
+      "20": "Up to 20 students",
+      "50": "Up to 50 students",
+      "100": "Up to 100 students",
+      "100plus": "More than 100 students"
+    },
+    "submit": "Send",
+    "sending": "Sending...",
+    "success": "Form submitted successfully!",
+    "error": "Please fill in all required fields.",
+    "namePlaceholder": "Enter your name",
+    "emailPlaceholder": "Enter your email",
+    "rolePlaceholder": "Select an option",
+    "studentCountPlaceholder": "Select an option"
+  },
+  "carousel": [
+    {
+      "title": "Connect, train, and evolve together.",
+      "desc": "Direct messages, workout updates, and real-time notifications to keep trainers and students engaged."
+    },
+    {
+      "title": "Create workouts and share easily.",
+      "desc": "Build complete workouts, organize schedules, and send everything to the student's app in a few clicks."
+    },
+    {
+      "title": "Visible progress, workout after workout.",
+      "desc": "Students track their performance with clear charts and up-to-date data."
+    }
+  ],
+  "appCarousel": [
+    {
+      "title": "Share your journey and celebrate results together!",
+      "desc": "Show your battle and results to the world, in various modalities: bodybuilding, running, cycling, crossfit, and more..."
+    },
+    {
+      "title": "Track your daily progress!",
+      "desc": "Intuitive interface to track workouts, exercises, and progress with detailed charts and constant motivation."
+    }
+  ],
+  "platformPreview": {
+    "title": "Get to know our platform",
+    "content": "Platform preview content"
+  },
+  "joinTeam": {
+    "title": "Join this team"
+  },
+  "footer": {
+    "contact": "Contact us:",
+    "email": "Email",
+    "rights": "All rights reserved - GYMO"
+  }
+}

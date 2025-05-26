@@ -1,4 +1,69 @@
-
 {
-    
+  "hero": {
+    "title": "GYMO",
+    "subtitle": "Conectamos profissionais e alunos que levam o treino a outro nível.",
+    "description": "A plataforma que une treinadores e alunos em um só lugar. Um espaço para gerenciar treinos, acompanhar resultados e manter uma comunicação eficiente e constante."
+  },
+  "form": {
+    "title": "Se inscreva pra receber antecipadamente!",
+    "name": "Nome completo",
+    "email": "E-mail",
+    "roleLabel": "Você é:",
+    "role": {
+      "trainer": "Treinador(a)",
+      "gym": "Tenho uma academia",
+      "student": "Aluno(a)"
+    },
+    "studentCount": "Quantos alunos você atende?",
+    "studentCountOptions": {
+      "20": "Até 20 alunos",
+      "50": "Até 50 alunos",
+      "100": "Até 100 alunos",
+      "100plus": "Mais de 100 alunos"
+    },
+    "submit": "Enviar",
+    "sending": "Enviando...",
+    "success": "Formulário enviado com sucesso!",
+    "error": "Por favor, preencha todos os campos obrigatórios.",
+    "namePlaceholder": "Digite seu nome",
+    "emailPlaceholder": "Digite seu e-mail",
+    "rolePlaceholder": "Selecione uma opção",
+    "studentCountPlaceholder": "Selecione uma opção"
+  },
+  "carousel": [
+    {
+      "title": "Conecte-se, treine e evolua juntos.",
+      "desc": "Mensagens diretas, atualizações de treino e notificações em tempo real para manter o máximo engajamento entre treinador e aluno."
+    },
+    {
+      "title": "Monte treinos e compartilhe com facilidade.",
+      "desc": "Estruture treinos completos, organize a agenda e envie tudo direto para o app do aluno, em poucos cliques."
+    },
+    {
+      "title": "Progresso visível, treino após treino.",
+      "desc": "O aluno acompanha seu desempenho com gráficos claros e dados atualizados."
+    }
+  ],
+  "appCarousel": [
+    {
+      "title": "Compartilhe sua jornada e comemore resultados juntos!",
+      "desc": "Mostre ao mundo sua batalha e seus resultados, em diversas modalidades, seja musculação, corrida, bike, crossfit e mais..."
+    },
+    {
+      "title": "Acompanhe seu progresso diário!",
+      "desc": "Interface intuitiva para acompanhar treinos, exercícios e evolução com gráficos detalhados e motivação constante."
+    }
+  ],
+  "platformPreview": {
+    "title": "Conheça um pouco da nossa plataforma",
+    "content": "Platform preview content"
+  },
+  "joinTeam": {
+    "title": "Faça parte desse time"
+  },
+  "footer": {
+    "contact": "Fale conosco:",
+    "email": "Email",
+    "rights": "Todos os direitos reservados - GYMO"
+  }
 }

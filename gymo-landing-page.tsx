@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -11,8 +11,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, XCircle } from "lucide-react"
+import { useTranslations } from 'next-intl';
 
 function ContactForm() {
+  const t = useTranslations();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -106,32 +108,32 @@ function ContactForm() {
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold text-gray-800">Se inscreva pra receber antecipadamente!</CardTitle>
+        <CardTitle className="text-xl font-semibold text-gray-800">{t('form.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field */}
           <div className="space-y-2">
-            <Label htmlFor="name">Nome completo</Label>
+            <Label htmlFor="name">{t('form.name')}</Label>
             <Input
               id="name"
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              placeholder="Digite seu nome"
+              placeholder={t('form.namePlaceholder')}
               className={status === "error" && !formData.name.trim() ? "border-red-500" : ""}
             />
           </div>
 
           {/* Email Field */}
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email">{t('form.email')}</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              placeholder="Digite seu e-mail"
+              placeholder={t('form.emailPlaceholder')}
               className={
                 status === "error" && (!formData.email.trim() || !formData.email.includes("@")) ? "border-red-500" : ""
               }
@@ -140,15 +142,15 @@ function ContactForm() {
 
           {/* User Type Field */}
           <div className="space-y-2">
-            <Label htmlFor="userType">Você é:</Label>
+            <Label htmlFor="userType">{t('form.roleLabel')}</Label>
             <Select value={formData.userType} onValueChange={(value) => handleInputChange("userType", value)}>
               <SelectTrigger className={status === "error" && !formData.userType ? "border-red-500" : ""}>
-                <SelectValue placeholder="Selecione uma opção" />
+                <SelectValue placeholder={t('form.rolePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="trainer">Treinador(a)</SelectItem>
-                <SelectItem value="gym">Tenho uma academia</SelectItem>
-                <SelectItem value="student">Aluno(a)</SelectItem>
+                <SelectItem value="trainer">{t('form.role.trainer')}</SelectItem>
+                <SelectItem value="gym">{t('form.role.gym')}</SelectItem>
+                <SelectItem value="student">{t('form.role.student')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -156,16 +158,16 @@ function ContactForm() {
           {/* Student Count Field - Only show for trainers and gym owners */}
           {(formData.userType === "trainer" || formData.userType === "gym") && (
             <div className="space-y-2">
-              <Label htmlFor="studentCount">Quantos alunos você atende?</Label>
+              <Label htmlFor="studentCount">{t('form.studentCount')}</Label>
               <Select value={formData.studentCount} onValueChange={(value) => handleInputChange("studentCount", value)}>
                 <SelectTrigger className={status === "error" && !formData.studentCount ? "border-red-500" : ""}>
-                  <SelectValue placeholder="Selecione uma opção" />
+                  <SelectValue placeholder={t('form.studentCountPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="up-to-20">Até 20 alunos</SelectItem>
-                  <SelectItem value="up-to-50">Até 50 alunos</SelectItem>
-                  <SelectItem value="up-to-100">Até 100 alunos</SelectItem>
-                  <SelectItem value="more-than-100">Mais de 100 alunos</SelectItem>
+                  <SelectItem value="up-to-20">{t('form.studentCountOptions.20')}</SelectItem>
+                  <SelectItem value="up-to-50">{t('form.studentCountOptions.50')}</SelectItem>
+                  <SelectItem value="up-to-100">{t('form.studentCountOptions.100')}</SelectItem>
+                  <SelectItem value="more-than-100">{t('form.studentCountOptions.100plus')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -173,21 +175,21 @@ function ContactForm() {
 
           {/* Submit Button */}
           <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white" disabled={isSubmitting}>
-            {isSubmitting ? "Enviando..." : "Enviar"}
+            {isSubmitting ? t('form.sending') : t('form.submit')}
           </Button>
 
           {/* Status Messages */}
           {status === "success" && (
             <div className="flex items-center gap-2 text-green-600 text-sm">
               <CheckCircle className="h-4 w-4" />
-              <span>Formulário enviado com sucesso!</span>
+              <span>{t('form.success')}</span>
             </div>
           )}
 
           {status === "error" && (
             <div className="flex items-center gap-2 text-red-600 text-sm">
               <XCircle className="h-4 w-4" />
-              <span>Por favor, preencha todos os campos obrigatórios.</span>
+              <span>{t('form.error')}</span>
             </div>
           )}
         </form>
@@ -196,39 +198,55 @@ function ContactForm() {
   )
 }
 
+// --- FeatureCarousel improvements ---
 function FeatureCarousel() {
+  const t = useTranslations();
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isUserInteracting, setIsUserInteracting] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const features = [
     {
-      title: "Conecte-se, treine e evolua juntos.",
-      description:
-        "Mensagens diretas, atualizações de treino e notificações em tempo real para manter o máximo engajamento entre treinador e aluno.",
+      title: t('carousel.0.title'),
+      description: t('carousel.0.desc'),
       image: "/friends-statue.png",
     },
     {
-      title: "Monte treinos e compartilhe com facilidade.",
-      description:
-        "Estruture treinos completos, organize a agenda e envie tudo direto para o app do aluno, em poucos cliques.",
+      title: t('carousel.1.title'),
+      description: t('carousel.1.desc'),
       image: "/classical-statues.png",
     },
     {
-      title: "Progresso visível, treino após treino.",
-      description: "O aluno acompanha seu desempenho com gráficos claros e dados atualizados.",
+      title: t('carousel.2.title'),
+      description: t('carousel.2.desc'),
       image: "/cell-statue.png",
     },
-  ]
+  ];
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % features.length)
   }, [features.length])
 
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + features.length) % features.length)
+  }, [features.length])
+
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
     setIsUserInteracting(true)
-    // Reset user interaction after 20 seconds
-    setTimeout(() => setIsUserInteracting(false), 20000)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
+  }
+
+  const handleNavigation = (direction: "prev" | "next") => {
+    if (direction === "prev") {
+      prevSlide()
+    } else {
+      nextSlide()
+    }
+    setIsUserInteracting(true)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
   }
 
   useEffect(() => {
@@ -238,6 +256,12 @@ function FeatureCarousel() {
     }
   }, [nextSlide, isUserInteracting])
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   return (
     <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 px-4">
       {/* Texto à esquerda */}
@@ -245,15 +269,21 @@ function FeatureCarousel() {
         <h3 className="text-6xl lg:text-6xl font-extrabold mb-6 text-white">
           {features[currentSlide].title}
         </h3>
-        <div className="bg-orange-500 h-1 w-1/2 rounded-lg m-2">
-
-        </div>
+        <div className="bg-orange-500 h-1 w-1/2 rounded-lg m-2" />
         <p className="text-xl opacity-80 mb-8 leading-relaxed text-white">
           {features[currentSlide].description}
         </p>
-
-        {/* Carousel dots */}
-        <div className="flex space-x-3 mt-4 lg:mt-8">
+        {/* Carousel navigation */}
+        <div className="flex items-center space-x-3 mt-4 lg:mt-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20"
+            onClick={() => handleNavigation("prev")}
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
           {features.map((_, index) => (
             <button
               key={index}
@@ -261,11 +291,20 @@ function FeatureCarousel() {
               className={`w-3 h-3 rounded-full transition-all ${
                 index === currentSlide ? "bg-white" : "bg-white/50"
               }`}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20"
+            onClick={() => handleNavigation("next")}
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
         </div>
       </div>
-
       {/* Imagem à direita */}
       <div className=" bg-[#D4C4A8] rounded-2xl p-8 flex justify-center h-1/4 w-1/3">
         <div className="w-72 max-w-md h-64 relative">
@@ -281,30 +320,30 @@ function FeatureCarousel() {
   )
 }
 
+// --- MobileAppCarousel improvements ---
 function MobileAppCarousel() {
+  const t = useTranslations();
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isUserInteracting, setIsUserInteracting] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const appScreens = [
     {
-      title: "Compartilhe sua jornada e comemore resultados juntos!",
-      description:
-        "Mostre ao mundo sua batalha e seus resultados, em diversas modalidades, seja musculação, corrida, bike, crossfit e mais...",
+      title: t('appCarousel.0.title'),
+      description: t('appCarousel.0.desc'),
       mockup: (
         <div>
           <Image src="/social-post-gymo.png" alt="Mobile app interface" className="object-cover rounded-2xl" width={200} height={200} />
         </div>
-        
       ),
     },
     {
-      title: "Acompanhe seu progresso diário!",
-      description:
-        "Interface intuitiva para acompanhar treinos, exercícios e evolução com gráficos detalhados e motivação constante.",
+      title: t('appCarousel.1.title'),
+      description: t('appCarousel.1.desc'),
       mockup: (
-          <div>
-            <Image src="/mobile-app.png" alt="Mobile app interface" className="object-cover rounded-2xl"  width={200} height={200} />
-          </div>
+        <div>
+          <Image src="/mobile-app.png" alt="Mobile app interface" className="object-cover rounded-2xl" width={200} height={200} />
+        </div>
       ),
     },
   ]
@@ -324,8 +363,8 @@ function MobileAppCarousel() {
       nextSlide()
     }
     setIsUserInteracting(true)
-    // Reset user interaction after 20 seconds
-    setTimeout(() => setIsUserInteracting(false), 20000)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setIsUserInteracting(false), 20000)
   }
 
   useEffect(() => {
@@ -335,6 +374,12 @@ function MobileAppCarousel() {
     }
   }, [nextSlide, isUserInteracting])
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   return (
     <div className="flex items-center justify-between max-w-6xl mx-auto">
       <Button
@@ -342,25 +387,24 @@ function MobileAppCarousel() {
         size="icon"
         className="text-white hover:bg-white/20 flex-shrink-0"
         onClick={() => handleNavigation("prev")}
+        aria-label="Previous app screen"
       >
         <ChevronLeft className="h-8 w-8" />
       </Button>
-
       <div className="flex-1 mx-8 lg:mx-16 text-center">
         <h3 className="text-2xl lg:text-3xl font-bold mb-6 leading-tight">{appScreens[currentSlide].title}</h3>
         <p className="text-lg opacity-90 mb-8 leading-relaxed max-w-2xl mx-auto">
           {appScreens[currentSlide].description}
         </p>
-
         {/* Phone mockup */}
         <div className="flex justify-center">{appScreens[currentSlide].mockup}</div>
       </div>
-
       <Button
         variant="ghost"
         size="icon"
         className="text-white hover:bg-white/20 flex-shrink-0"
         onClick={() => handleNavigation("next")}
+        aria-label="Next app screen"
       >
         <ChevronRight className="h-8 w-8" />
       </Button>
@@ -369,6 +413,7 @@ function MobileAppCarousel() {
 }
 
 export default function GymoLandingPage() {
+  const t = useTranslations();
   return (
     <div className="w-full bg-white">
       {/* Hero Section */}
@@ -380,25 +425,24 @@ export default function GymoLandingPage() {
 
         <div className="flex justify-center space-y-3">
           <div className=" absolute right-52 bottom-44 z-10 max-w-md lg:max-w-2xl text-white">
-          <h1 className="text-8xl lg:text-9xl font-bold mb-8 pl-10">GYMO</h1>
-          <h1 className="text-2xl lg:text-4xl font-semibold mb-6 leading-snug">
-            Conectamos profissionais e alunos que levam o treino a outro nível.
-          </h1>
-          <p className="text-lg lg:text-3xl font-medium leading-relaxed pl-12">
-            A plataforma que une treinadores e alunos em um só lugar. Um espaço para gerenciar treinos, acompanhar
-            resultados e manter uma comunicação eficiente e constante.
-          </p>
-        </div>
+            <h1 className="text-8xl lg:text-9xl font-bold mb-8 pl-10">{t('hero.title')}</h1>
+            <h1 className="text-2xl lg:text-4xl font-semibold mb-6 leading-snug">
+              {t('hero.subtitle')}
+            </h1>
+            <p className="text-lg lg:text-3xl font-medium leading-relaxed pl-12">
+              {t('hero.description')}
+            </p>
+          </div>
 
-        {/* Classical statue in hero */}
-        <div className="absolute bottom-0 left-3 w-[30rem] lg:w-[40rem] h-[36rem] lg:h-[48rem]">
-          <Image
-            src="/note-statue.png"
-            alt="Classical statue with phone"
-            fill
-            className="object-contain object-bottom"
-          />
-        </div>
+          {/* Classical statue in hero */}
+          <div className="absolute bottom-0 left-3 w-[30rem] lg:w-[40rem] h-[36rem] lg:h-[48rem]">
+            <Image
+              src="/note-statue.png"
+              alt="Classical statue with phone"
+              fill
+              className="object-contain object-bottom"
+            />
+          </div>
         </div>
       </section>
 
@@ -424,31 +468,29 @@ export default function GymoLandingPage() {
       {/* Platform Preview Section */}
       <section className="bg-[#2C2C2C] py-16 lg:py-24">
         <div className="container mx-auto px-8 text-center">
-          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-12">Conheça um pouco da nossa plataforma</h3>
+          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-12">{t('platformPreview.title')}</h3>
           <div className="bg-[#1A1A1A] rounded-2xl p-16 lg:p-24 min-h-[400px] flex items-center justify-center max-w-4xl mx-auto">
-            <p className="text-gray-500 text-xl">Platform preview content</p>
+            <p className="text-gray-500 text-xl">{t('platformPreview.content')}</p>
           </div>
         </div>
       </section>
 
       {/* Join Team Section - Contact Form */}
       <section className="bg-gray-50 py-16 lg:py-24">
-        
         <div className="container mx-auto px-8">
-          <h3 className="text-center text-2xl lg:text-3xl font-semibold text-gray-800 mb-12">Faça parte desse time</h3>
+          <h3 className="text-center text-2xl lg:text-3xl font-semibold text-gray-800 mb-12">{t('joinTeam.title')}</h3>
 
           <div className="flex items-start justify-center gap-16 max-w-6xl mx-auto">
             {/* Bodybuilder image */}
             <div className="w-2/3 bg-gray-500 rounded-lg relative flex-shrink-0">
               <Image
-                src="./db-statue.png"
+                src="/db-statue.png"
                 alt="Bodybuilder flexing"
                 width={650}
                 height={750}
                 className="object-cover rounded-2xl"
               />
             </div>
-
             {/* Contact Form */}
             <ContactForm />
           </div>
@@ -457,8 +499,8 @@ export default function GymoLandingPage() {
 
       <footer className="bg-zinc-900 h-32 flex-col justify-center items-center text-white text-center font-bold">
         <div className=" text-gray-400 p-10">
-          <p>Fale conosco: <a className="text-orange-500" href="miguloaisf">Email</a></p>
-          <p>Todos os direitos reservados - GYMO</p>
+          <p>{t('footer.contact')} <a className="text-orange-500" href="miguloaisf">{t('footer.email')}</a></p>
+          <p>{t('footer.rights')}</p>
         </div>
       </footer>
     </div>
