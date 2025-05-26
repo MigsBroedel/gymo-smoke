@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import LocaleProvider from '../LocaleProvider';
 import { locales } from '../layout';
+import { getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -17,7 +18,9 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  const { locale } = await params;
+  const awaitedParams = await params;
+  const { locale } = awaitedParams;
   if (!locales.includes(locale)) notFound();
-  return <LocaleProvider>{children}</LocaleProvider>;
+  const messages = await getMessages({ locale });
+  return <LocaleProvider messages={messages}>{children}</LocaleProvider>;
 }

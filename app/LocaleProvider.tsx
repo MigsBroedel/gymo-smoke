@@ -1,6 +1,5 @@
-import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 
-export default function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const messages = useMessages();
+export default function LocaleProvider({ children, messages }: { children: React.ReactNode; messages: any }) {
   return <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>;
 }
