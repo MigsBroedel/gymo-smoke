@@ -277,7 +277,7 @@ function FeatureCarousel() {
       </div>
   
       <div className="flex-col items-center justify-center">
-        <div className=" bg-[#D4C4A8] rounded-2xl p-8 flex justify-center p-4">
+        <div className=" bg-[#D4C4A8] rounded-2xl flex justify-center p-4">
         <div className="w-72 max-w-md h-64 relative">
           <Image
             src={features[currentSlide].image || "/placeholder.svg"}
